@@ -35,4 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/polls/{poll}', [PollController::class, 'destroy'])->name('polls.destroy');
 });
 
+Route::get('/vote/{slug}', [PollController::class, 'getPoll'])->name('vote');
+
 require __DIR__.'/auth.php';

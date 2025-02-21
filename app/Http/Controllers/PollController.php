@@ -71,6 +71,19 @@ class PollController extends Controller
     }
 
     /**
+     * Retrieve and display a specific poll by slug.
+     *
+     * @param int $id The ID of the poll.
+     * @return \Illuminate\Http\JsonResponse JSON response with poll details.
+     */
+    public function getPoll($slug)
+    {
+        $poll = $this->pollService->getPollBySlug($slug);
+
+        return Inertia::render('Polls/Vote', compact('poll'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Poll $poll)

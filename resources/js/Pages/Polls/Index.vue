@@ -1,6 +1,11 @@
 <script setup>
 import { defineProps } from 'vue';
 import { router, Link } from '@inertiajs/vue3';
+import { useClipboard } from "@vueuse/core";
+import Modal from "@/Components/Modal.vue";
+import { ref } from "vue";
+
+
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
@@ -11,6 +16,36 @@ const deletePoll = (id) => {
     if (confirm("Are you sure you want to delete this poll?")) {
         router.delete(`/polls/${id}`);
     }
+};
+
+const showCopyModal = ref(false);
+const copyLink = ref("");
+const copySuccess = ref(false);
+const copyInput = ref(null);
+
+const { copy } = useClipboard();
+
+const openCopyModal = (slug) => {
+  copyLink.value = `${window.location.origin}/vote/${slug}`;
+  showCopyModal.value = true;
+    copySuccess.value = false;
+};
+
+// Copy to clipboard
+const copyToClipboard = async () => {
+    console.log(copyInput)
+
+    copyInput.select();
+    // copyInput.setSelectionRange(0, 99999); // For mobile devices
+
+   // Copy the text inside the text field
+    navigator.clipboard.writeText(copyLink);
+
+};
+
+// Close modal
+const closeModal = () => {
+  showCopyModal.value = false;
 };
 </script>
 
@@ -81,6 +116,37 @@ const deletePoll = (id) => {
                                                         d="M6 18L18 6M6 6l12 12"></path>
                                                 </svg>
                                             </button>
+                                            <!-- Shareable Link -->
+                                            <button @click="openCopyModal(poll.slug)"
+                                                class="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                            <Modal :show="showCopyModal" maxWidth="md" @close="closeModal">
+                                            <div class="p-5">
+                                                <h3 class="text-lg font-bold mb-3">Share Poll Link</h3>
+                                                <input
+                                                type="text"
+                                                :value="copyLink"
+                                                ref="copyInput"
+                                                class="w-full px-3 py-2 border rounded-lg bg-gray-100 text-gray-700"
+                                                readonly
+                                                />
+                                                <div class="flex justify-between mt-4">
+                                                <button @click="copyToClipboard" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+                                                    Copy Link
+                                                </button>
+                                                <button @click="closeModal" class="bg-gray-400 text-white px-4 py-2 rounded-md">
+                                                    Close
+                                                </button>
+                                                </div>
+                                                <p v-if="copySuccess" class="text-green-500 mt-2">Copied to clipboard!</p>
+                                            </div>
+                                            </Modal>
+
                                         </div>
                                     </td>
                                 </tr>

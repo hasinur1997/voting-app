@@ -123,6 +123,20 @@ class PollService
     }
 
     /**
+     * Get poll by slug
+     *
+     * @param   string  $slug  Poll slug
+     *
+     * @return  Poll|null The retrieved poll or null if not found.
+     */
+    public function getPollBySlug($slug)
+    {
+        return Poll::with('options')
+                   ->where('slug', $slug)
+                   ->firstOrFail();
+    }
+
+    /**
      * Generate poll slug
      *
      * @param   string  $question  Poll question
