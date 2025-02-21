@@ -16,4 +16,12 @@ class PollOption extends Model
         'option_text',
         'votes',
     ];
+    
+    /**
+     * Get the poll that owns the option.
+     */
+    public function poll()
+    {
+        return $this->belongsTo(Poll::class);
+    }
 }

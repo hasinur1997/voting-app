@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Poll;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\PollOption;
+use App\Http\Requests\StorePollRequest;
 
 class PollController extends Controller
 {
@@ -27,9 +29,16 @@ class PollController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePollRequest $request)
     {
-        //
+        $poll = Poll::create(['question' => $request->question]);
+
+        $poll->options()->createMany(
+            collect($request->options)->map(fn($option) => ['option_text' => $option])->toArray()
+        );
+
+
+        return response()->json(['message' => 'Poll created successfully!']);
     }
 
     /**
