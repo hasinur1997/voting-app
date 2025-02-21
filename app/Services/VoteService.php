@@ -27,7 +27,7 @@ class VoteService
      * @param string $userIp The IP address of the user casting the vote.
      * @return void
      */
-    public function recordVote(PollOption $pollOption, string $userIp): void
+    public function castVote(PollOption $pollOption, string $userIp): void
     {
         // Store the vote in the database
         Vote::create([

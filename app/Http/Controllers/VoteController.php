@@ -41,7 +41,7 @@ class VoteController extends Controller
         }
 
         // Record the user's vote
-        $this->voteService->recordVote($pollOption, $userIp);
+        $this->voteService->castVote($pollOption, $userIp);
 
         return response()->json(['message' => 'Vote recorded successfully!']);
     }
