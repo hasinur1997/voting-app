@@ -38,6 +38,60 @@ class PollService
     }
 
     /**
+     * Update a poll with new question and options.
+     *
+     * @param Poll $poll The poll to update.
+     * @param string $question The new poll question.
+     * @param array $options The updated list of poll options.
+     * @return Poll The updated poll.
+     */
+    public function updatePoll(Poll $poll, string $question, array $options): Poll
+    {
+        return DB::transaction(function () use ($poll, $question, $options) {
+            // Update poll question
+            $poll->update(['question' => $question]);
+
+            // Fetch existing poll options (id => text)
+            $existingOptions = $poll->options()->pluck('option_text', 'id')->toArray();
+
+            // Separate options into new, updated, and deleted categories
+            $newOptions = collect($options);
+            $optionsToUpdate = [];
+            $optionsToDelete = array_diff($existingOptions, $newOptions->toArray());
+            $optionsToInsert = $newOptions->diff($existingOptions);
+
+            // Update existing options (only if text has changed)
+            foreach ($existingOptions as $id => $text) {
+                if ($newOptions->contains($text)) {
+                    continue; // Skip if unchanged
+                }
+
+                // Find a matching option and update it
+                if ($newOptions->search(fn($newText) => $newText === $text) === false) {
+                    $updatedText = $newOptions->first();
+                    $optionsToUpdate[$id] = ['option_text' => $updatedText];
+                    $newOptions = $newOptions->reject(fn($newText) => $newText === $updatedText);
+                }
+            }
+
+            // Perform batch update for modified options
+            foreach ($optionsToUpdate as $id => $data) {
+                PollOption::where('id', $id)->update($data);
+            }
+
+            // Delete removed options
+            $poll->options()->whereIn('option_text', $optionsToDelete)->delete();
+
+            // Insert new options
+            $poll->options()->createMany(
+                collect($optionsToInsert)->map(fn($text) => ['option_text' => $text])->toArray()
+            );
+
+            return $poll;
+        });
+    }
+
+    /**
      * List all polls with their options.
      *
      * @return \Illuminate\Database\Eloquent\Collection Collection of polls.
@@ -45,5 +99,22 @@ class PollService
     public function listPolls()
     {
         return Poll::with('options')->get();
+    }
+
+    /**
+     * Delete a poll and its associated options.
+     *
+     * @param Poll $poll The poll to delete.
+     * @return bool Whether the deletion was successful.
+     */
+    public function deletePoll(Poll $poll): bool
+    {
+        return DB::transaction(function () use ($poll) {
+            // Delete all related poll options first
+            $poll->options()->delete();
+
+            // Delete the poll itself
+            return $poll->delete();
+        });
     }
 }

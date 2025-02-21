@@ -32,7 +32,7 @@ class PollController extends Controller
     {
         $polls = $this->pollService->listPolls();
 
-        return Inertia::render('Polls/Index', ['polls' => $polls]);
+        return Inertia::render('Polls/Index', compact('polls'));
     }
 
     /**
@@ -54,7 +54,7 @@ class PollController extends Controller
 
         $poll = $this->pollService->createPoll($request->question, $request->options);
 
-        return response()->json(['message' => 'Poll created successfully!', 'poll' => $poll], 201);
+        return redirect()->route('polls.index');
     }
 
     /**
@@ -65,6 +65,8 @@ class PollController extends Controller
      */
     public function show(Poll $poll)
     {
+        $poll = $this->pollService->getPoll($poll->id);
+
         return Inertia::render('Polls/Show', compact('poll'));
     }
 
@@ -73,15 +75,21 @@ class PollController extends Controller
      */
     public function edit(Poll $poll)
     {
+        $poll = $this->pollService->getPoll($poll->id);
+
         return Inertia::render('Polls/Edit', compact('poll'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Poll $poll)
+    public function update(StorePollRequest $request, Poll $poll)
     {
-        //
+        $this->pollService->updatePoll($poll, $request->question, $request->options);
+
+        return redirect()->back()
+                        ->with('success', 'Poll updated successfully!');
+
     }
 
     /**
@@ -89,6 +97,8 @@ class PollController extends Controller
      */
     public function destroy(Poll $poll)
     {
-        //
+        $this->pollService->deletePoll($poll);
+
+        return redirect()->back();
     }
 }

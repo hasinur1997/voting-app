@@ -1,11 +1,24 @@
 <script setup>
 import { defineProps } from 'vue';
-import { router, Link } from '@inertiajs/vue3';
+import { Head, router, Link } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
 
+    const props = defineProps({
+        poll: Object
+    });
 
+    const deletePoll = async (pollId) => {
+        if (confirm('Are you sure you want to delete this poll?')) {
+            try {
+            await axios.delete(route('admin.polls.destroy', pollId));
+            // Redirect to the list page or show success
+            window.location.href = route('admin.polls.index');
+            } catch (error) {
+            console.error(error);
+            }
+        }
+    };
 </script>
 
 <template>
@@ -20,21 +33,45 @@ import { Head } from '@inertiajs/vue3';
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
-                >
-                    <div class="p-6 text-gray-900">
-                        <!-- Create Poll Button -->
-                        <Link :href="route('polls.index')" class="bg-blue-500 text-white px-4 py-2 rounded inline-block mb-4">
-                            Back To List
-                        </Link>
+        <div class="flex items-start justify-center min-h-screen bg-gray-100">
+    <div class="max-w-2xl w-full p-6 bg-white shadow-lg rounded-xl border border-gray-200 mt-16">
+      <!-- Poll Title -->
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">{{ poll.question }}</h2>
 
-                        Show Poll
-                    </div>
-                </div>
-            </div>
+      <!-- Poll Options -->
+      <div class="space-y-3">
+        <div
+          v-for="option in poll.options"
+          :key="option.id"
+          class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-gray-50 hover:bg-gray-100 transition"
+        >
+          <span class="text-gray-700 font-medium">{{ option.option_text }}</span>
+
+          <!-- Vote Count Badge -->
+          <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
+            {{ option.votes }} Votes
+          </span>
         </div>
+      </div>
+    </div>
+  </div>
     </AuthenticatedLayout>
 </template>
+
+<style scoped>
+    .poll-show {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    }
+
+    .poll-option {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    }
+
+    button {
+    width: 100%;
+    }
+</style>
