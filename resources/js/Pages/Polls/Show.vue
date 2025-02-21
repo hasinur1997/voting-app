@@ -34,25 +34,26 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
         </template>
 
         <div class="flex items-start justify-center min-h-screen bg-gray-100">
-    <div class="max-w-2xl w-full p-6 bg-white shadow-lg rounded-xl border border-gray-200 mt-16">
-      <!-- Poll Title -->
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">{{ poll.question }}</h2>
+            <div class="max-w-2xl w-full p-6 bg-white shadow-lg rounded-xl border border-gray-200 mt-16">
+            <Link :href="route('polls.index')" class="text-blue-600 hover:underline">← Back to Polls</Link>
+            <!-- Poll Title -->
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">{{ poll.question }}</h2>
 
-      <!-- Poll Options -->
-      <div class="space-y-3">
-        <div
-          v-for="option in poll.options"
-          :key="option.id"
-          class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-gray-50 hover:bg-gray-100 transition"
-        >
-          <span class="text-gray-700 font-medium">{{ option.option_text }}</span>
+            <!-- Poll Options -->
+            <div class="space-y-3">
+                <div
+                v-for="option in poll.options"
+                :key="option.id"
+                class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-gray-50 hover:bg-gray-100 transition"
+                >
+                <span class="text-gray-700 font-medium">{{ option.option_text }}</span>
 
-          <!-- Vote Count Badge -->
-          <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
-            {{ option.votes }} Votes
-          </span>
-        </div>
-      </div>
+                <!-- Vote Count Badge -->
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
+                    {{ option.votes }} Votes
+                </span>
+                </div>
+            </div>
     </div>
   </div>
     </AuthenticatedLayout>

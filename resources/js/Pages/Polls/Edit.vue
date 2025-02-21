@@ -14,7 +14,6 @@ const props = defineProps({
     poll: Object, // Poll data from backend
 });
 
-console.log(props.poll);
 
 // Prefill form with existing data
 const form = useForm({
