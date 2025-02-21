@@ -26,11 +26,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/poll', [PollController::class, 'index'])->name('poll');
-    Route::post('/poll', [PollController::class, 'create'])->name('poll.create');
-    Route::get('/poll', [PollController::class, 'edit'])->name('poll.edit');
-    Route::patch('/poll', [PollController::class, 'update'])->name('poll.update');
-    Route::delete('/poll', [PollController::class, 'destroy'])->name('poll.destroy');
+    Route::get('/polls', [PollController::class, 'index'])->name('polls.index');
+    Route::get('/polls/create', [PollController::class, 'create'])->name('polls.create');
+    Route::post('/polls', [PollController::class, 'store'])->name('polls.store');
+    Route::get('/polls/{poll}/edit', [PollController::class, 'edit'])->name('polls.edit');
+    Route::get('/polls/{poll}/show', [PollController::class, 'show'])->name('polls.show');
+    Route::patch('/polls/{poll}', [PollController::class, 'update'])->name('polls.update');
+    Route::delete('/polls/{poll}', [PollController::class, 'destroy'])->name('polls.destroy');
 });
 
 require __DIR__.'/auth.php';

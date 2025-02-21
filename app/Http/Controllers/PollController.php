@@ -24,6 +24,26 @@ class PollController extends Controller
     }
 
     /**
+     * Retrieve a list of all polls.
+     *
+     * @return \Illuminate\Http\JsonResponse JSON response with a list of polls.
+     */
+    public function index()
+    {
+        $polls = $this->pollService->listPolls();
+
+        return Inertia::render('Polls/Index', ['polls' => $polls]);
+    }
+
+    /**
+     * Show the form for creating poll.
+     */
+    public function create()
+    {
+        return Inertia::render('Polls/Create');
+    }
+
+    /**
      * Create a new poll with multiple options.
      *
      * @param Request $request The HTTP request containing poll data.
@@ -43,27 +63,9 @@ class PollController extends Controller
      * @param int $id The ID of the poll.
      * @return \Illuminate\Http\JsonResponse JSON response with poll details.
      */
-    public function show($id)
+    public function show(Poll $poll)
     {
-        $poll = $this->pollService->getPoll($id);
-
-        if (!$poll) {
-            return response()->json(['message' => 'Poll not found!'], 404);
-        }
-
-        return response()->json($poll);
-    }
-
-    /**
-     * Retrieve a list of all polls.
-     *
-     * @return \Illuminate\Http\JsonResponse JSON response with a list of polls.
-     */
-    public function index()
-    {
-        $polls = $this->pollService->listPolls();
-
-        return response()->json($polls);
+        return Inertia::render('Polls/Show', compact('poll'));
     }
 
     /**
@@ -71,7 +73,7 @@ class PollController extends Controller
      */
     public function edit(Poll $poll)
     {
-        //
+        return Inertia::render('Polls/Edit', compact('poll'));
     }
 
     /**

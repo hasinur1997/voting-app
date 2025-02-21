@@ -40,7 +40,7 @@ class VoteController extends Controller
             return response()->json(['message' => 'You have already voted!'], 403);
         }
 
-        // Record the user's vote
+        // Cast the user's vote
         $this->voteService->castVote($pollOption, $userIp);
 
         return response()->json(['message' => 'Vote recorded successfully!']);

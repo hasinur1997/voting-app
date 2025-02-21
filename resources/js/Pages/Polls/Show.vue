@@ -1,6 +1,11 @@
 <script setup>
+import { defineProps } from 'vue';
+import { router, Link } from '@inertiajs/vue3';
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+
+
 </script>
 
 <template>
@@ -21,7 +26,12 @@ import { Head } from '@inertiajs/vue3';
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
                     <div class="p-6 text-gray-900">
-                        Poll Lists
+                        <!-- Create Poll Button -->
+                        <Link :href="route('polls.index')" class="bg-blue-500 text-white px-4 py-2 rounded inline-block mb-4">
+                            Back To List
+                        </Link>
+
+                        Show Poll
                     </div>
                 </div>
             </div>
