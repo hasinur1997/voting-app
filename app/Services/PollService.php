@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Models\Poll;
 use App\Models\PollOption;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PollService
 {
@@ -17,7 +18,10 @@ class PollService
     public function createPoll(string $question, array $options): Poll
     {
         return DB::transaction(function () use ($question, $options) {
-            $poll = Poll::create(['question' => $question]);
+            $poll = Poll::create([
+                'question' => $question,
+                'slug'  => $this->generateUniqueSlug($question),
+            ]);
             $poll->options()->createMany(
                 collect($options)->map(fn($option) => ['option_text' => $option])->toArray()
             );
@@ -116,5 +120,20 @@ class PollService
             // Delete the poll itself
             return $poll->delete();
         });
+    }
+
+    /**
+     * Generate poll slug
+     *
+     * @param   string  $question  Poll question
+     *
+     * @return  string Generated unique slug
+     */
+    private function generateUniqueSlug($question)
+    {
+        $slug = Str::slug($question);
+        $count = Poll::where('slug', 'like', $slug . '%')->count();
+
+        return $count ? "{$slug}-{$count}" : $slug;
     }
 }

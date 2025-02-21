@@ -59,6 +59,7 @@ class ListPollsCommand extends Command
         foreach ($polls as $poll) {
             $this->info("Poll ID: {$poll->id}");
             $this->line("Question: {$poll->question}");
+            $this->line("Slug: {$poll->slug}");
             $this->line("Options:");
 
             // Format options in a table format

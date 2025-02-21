@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Poll extends Model
 {
-    protected $fillable = ['question'];
+    protected $fillable = ['question', 'slug'];
 
     /**
      * Get the options for the poll.
