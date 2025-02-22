@@ -1,24 +1,26 @@
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, ref, onMounted, watch } from 'vue';
 import { Head, router, Link } from '@inertiajs/vue3';
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 
-    const props = defineProps({
-        poll: Object
-    });
+const props = defineProps({
+    poll: Object
+});
 
-    const deletePoll = async (pollId) => {
-        if (confirm('Are you sure you want to delete this poll?')) {
-            try {
-            await axios.delete(route('admin.polls.destroy', pollId));
-            // Redirect to the list page or show success
-            window.location.href = route('admin.polls.index');
-            } catch (error) {
-            console.error(error);
+const pollOptions = ref(props.poll.options);
+
+window.Echo.channel('poll-updates')
+        .listen('VoteCast', (event) => {
+            const updatedOption = pollOptions.value.find(option => option.id === event.poll_option_id);
+            if (updatedOption) {
+                updatedOption.votes = event.votes; // Update the vote count
             }
-        }
-    };
+        })
+        .error((err) => {
+            console.error("Echo error:", err);
+        });
+
 </script>
 
 <template>

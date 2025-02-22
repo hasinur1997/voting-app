@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VoteCast;
 use App\Models\PollOption;
 use App\Services\VoteService;
 use Illuminate\Http\Request;
@@ -46,6 +47,8 @@ class VoteController extends Controller
 
         // Cast the user's vote
         $this->voteService->castVote($pollOption, $userIp);
+
+        event(new VoteCast($pollOption));
 
         return response()->json(['message' => 'Vote recorded successfully!']);
     }
