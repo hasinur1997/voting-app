@@ -28,20 +28,23 @@ const { copy } = useClipboard();
 const openCopyModal = (slug) => {
   copyLink.value = `${window.location.origin}/vote/${slug}`;
   showCopyModal.value = true;
-    copySuccess.value = false;
+  copySuccess.value = false;
 };
 
 // Copy to clipboard
 const copyToClipboard = async () => {
-    console.log(copyInput)
+  try {
+    await navigator.clipboard.writeText(copyLink.value);
+    copySuccess.value = true;
 
-    copyInput.select();
-    // copyInput.setSelectionRange(0, 99999); // For mobile devices
-
-   // Copy the text inside the text field
-    navigator.clipboard.writeText(copyLink);
-
-};
+    setTimeout(() => {
+      copySuccess.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+    copySuccess.value = false;
+  }
+}
 
 // Close modal
 const closeModal = () => {
