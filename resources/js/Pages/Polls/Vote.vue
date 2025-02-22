@@ -1,20 +1,16 @@
 <script setup>
-import { defineProps } from 'vue';
-import { Head, router, Link } from '@inertiajs/vue3';
+import { defineProps, ref } from 'vue';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
     poll: Object
 });
 
-const deletePoll = async (pollId) => {
-    if (confirm('Are you sure you want to delete this poll?')) {
-        try {
-        await axios.delete(route('admin.polls.destroy', pollId));
-        // Redirect to the list page or show success
-        window.location.href = route('admin.polls.index');
-        } catch (error) {
-        console.error(error);
-        }
+const selectedOption = ref(null);
+
+const submitVote = () => {
+    if (selectedOption.value) {
+        router.post(`/polls/${props.poll.id}/vote`, { option_id: selectedOption.value });
     }
 };
 </script>
@@ -25,39 +21,50 @@ const deletePoll = async (pollId) => {
             <!-- Poll Title -->
             <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">{{ poll.question }}</h2>
 
-        <!-- Poll Options -->
-        <div class="space-y-3">
-            <div
-            v-for="option in poll.options"
-            :key="option.id"
-            class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-gray-50 hover:bg-gray-100 transition"
-            >
-            <span class="text-gray-700 font-medium">{{ option.option_text }}</span>
+            <!-- Poll Options -->
+            <div class="space-y-3">
+                <label
+                    v-for="option in poll.options"
+                    :key="option.id"
+                    class="flex items-center justify-between p-4 border rounded-lg shadow-sm bg-gray-50 hover:bg-gray-100 transition cursor-pointer"
+                >
+                    <span class="text-gray-700 font-medium">{{ option.option_text }}</span>
+                    <input
+                        type="radio"
+                        :value="option.id"
+                        v-model="selectedOption"
+                        class="h-5 w-5 text-blue-600"
+                    />
+                </label>
+            </div>
 
-            <!-- Vote Count Badge -->
-            <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-semibold rounded-full">
-                {{ option.votes }} Votes
-            </span>
+            <!-- Submit Button -->
+            <div v-if="selectedOption" class="mt-4 flex justify-center">
+                <button
+                    @click="submitVote"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+                >
+                    Vote Now
+                </button>
             </div>
         </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
-    .poll-show {
+.poll-show {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    }
+}
 
-    .poll-option {
+.poll-option {
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    }
+}
 
-    button {
+button {
     width: 100%;
-    }
+}
 </style>
