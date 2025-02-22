@@ -1,17 +1,84 @@
 <script setup>
 import { defineProps, ref } from 'vue';
-import { router } from '@inertiajs/vue3';
+import axios from 'axios';
 
 const props = defineProps({
     poll: Object
 });
 
 const selectedOption = ref(null);
+const votingMessage = ref('');
+const isVoting = ref(false);
+const errorMessages = {
+    404: 'Poll option not found.',
+    403: 'You have already voted!',
+    default: 'An error occurred while submitting your vote.',
+    network: 'Network error. Please try again.',
+};
 
-const submitVote = () => {
-    if (selectedOption.value) {
-        router.post(`/polls/${props.poll.id}/vote`, { option_id: selectedOption.value });
+/**
+ * Handles the vote submission process.
+ *
+ * This function checks if a poll option has been selected. If a valid option is selected,
+ * it sends the vote request to the server. It also manages the voting state (loading)
+ * and displays appropriate messages based on the outcome (success or failure).
+ *
+ * @async
+ * @function submitVote
+ */
+ const submitVote = async () => {
+    // Check if the user has selected a poll option
+    if (isOptionSelected()) {
+        // Set the voting state to true to indicate loading
+        setVotingState(true);
+
+        try {
+            // Attempt to send the vote request to the server
+            const response = await sendVoteRequest(selectedOption.value);
+
+            // On successful vote submission, set the message to inform the user
+            setVotingMessage(response.data.message);
+        } catch (error) {
+            // Handle any errors that occur during the vote submission process
+            handleVoteError(error);
+        } finally {
+            // Regardless of success or failure, reset the voting state to false
+            setVotingState(false);
+        }
+    } else {
+        // If no option is selected, prompt the user to select an option
+        setVotingMessage('Please select an option before voting.');
     }
+};
+
+// Check if an option is selected
+const isOptionSelected = () => selectedOption.value !== null;
+
+// Set the voting state (loading or not)
+const setVotingState = (state) => {
+    isVoting.value = state;
+};
+
+// Set the message to be displayed to the user
+const setVotingMessage = (message) => {
+    votingMessage.value = message;
+};
+
+// Handle the API errors
+const handleVoteError = (error) => {
+    let errorMessage = errorMessages.default;
+
+    if (error.response) {
+        errorMessage = errorMessages[error.response.status] || errorMessages.default;
+    } else {
+        errorMessage = errorMessages.network;
+    }
+    setVotingMessage(errorMessage);
+};
+
+// Send the vote to the API
+const sendVoteRequest = (pollOptionId) => {
+    return axios.post(`/api/vote/cast/${pollOptionId}`);
 };
 </script>
 
@@ -38,13 +105,17 @@ const submitVote = () => {
                 </label>
             </div>
 
+            <!-- Voting Message -->
+            <p v-if="votingMessage" class="text-red-500 mt-2">{{ votingMessage }}</p>
+
             <!-- Submit Button -->
             <div v-if="selectedOption" class="mt-4 flex justify-center">
                 <button
                     @click="submitVote"
+                    :disabled="isVoting"
                     class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
                 >
-                    Vote Now
+                    {{ isVoting ? 'Submitting Vote...' : 'Vote Now' }}
                 </button>
             </div>
         </div>

@@ -33,7 +33,11 @@ class VoteController extends Controller
         $userIp = $request->ip();
 
         // Find the poll option or return 404 if not found
-        $pollOption = PollOption::findOrFail($pollOptionId);
+        $pollOption = PollOption::find($pollOptionId);
+
+        if (!$pollOption) {
+            return response()->json(['error' => 'Poll option not found.'], 404);
+        }
 
         // Check if the user has already voted in this poll
         if ($this->voteService->hasUserVoted($pollOption->poll_id, $userIp)) {
