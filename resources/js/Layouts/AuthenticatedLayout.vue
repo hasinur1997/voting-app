@@ -43,7 +43,7 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('polls.index')"
                                     :active="route().current('polls.index')"
                                 >
-                                    Poll
+                                    Polls
                                 </NavLink>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ const emit = defineEmits(['delete']);
     <table class="w-full border">
         <thead>
             <tr class="bg-gray-100">
-                <th class="border px-4 py-2 text-left">Question</th>
+                <th class="border px-4 py-2 text-left">Poll Questions</th>
                 <th class="border px-4 py-2 text-center">Actions</th>
             </tr>
         </thead>

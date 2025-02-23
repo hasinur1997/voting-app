@@ -15,10 +15,10 @@ const deletePoll = (id) => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Polls" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Poll</h2>
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">Poll List</h2>
         </template>
 
         <div class="py-12">
