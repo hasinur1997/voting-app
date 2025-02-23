@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PollOption extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -16,7 +19,7 @@ class PollOption extends Model
         'option_text',
         'votes',
     ];
-    
+
     /**
      * Get the poll that owns the option.
      */
