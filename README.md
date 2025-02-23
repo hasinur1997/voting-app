@@ -22,6 +22,7 @@ Clone the project repository to your local machine:
 ```bash
 git clone https://github.com/hasinur1997/voting-app.git
 
+```
 
 ```sh
 composer install
