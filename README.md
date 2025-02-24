@@ -74,6 +74,12 @@ php artisan poll:list
 
 ```
 
+### To seed database
+```bash
+php artisan db:seed --class=PollSeeder
+
+```
+
 ### To test real-time functionality
 
 1. Login 
