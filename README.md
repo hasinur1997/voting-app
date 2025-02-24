@@ -53,6 +53,26 @@ VITE_PUSHER_PORT="${PUSHER_PORT}"
 VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
 VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 
+### To create an user
+
+```bash
+php artisan user:create "John Doe" "john@example.com" "securepassword"
+
+```
+
+### To create a poll
+
+```bash
+php artisan poll:create "What is favorite programming language" "PHP" "Python" "JavaScript"
+
+```
+
+### To view poll list
+
+```bash
+php artisan poll:list
+
+```
 
 ### To test real-time functionality
 
