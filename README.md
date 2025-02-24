@@ -59,12 +59,12 @@ VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
 1. Login 
 2. Go to poll list
 3. Get sharebale link from the one of poll list and visit the link
-![Poll Link](https://jam.dev/c/7806b03f-0f81-4d0b-8e64-2656e9f38814)
+![Poll Link](https://drive.google.com/file/d/1Z-6C-vUg-qK2GjkveYBhjqfldGKnk7A5/view?usp=drive_link)
 4. View the poll that you visit poll link in one browser tab
-![Single poll view](https://jam.dev/c/44d27ffd-083e-4833-a5d6-73a14395a013)
+![Single poll view](https://drive.google.com/file/d/1GXR7wmDJwsqCnS7Hal3h6v6RicyHqdBX/view?usp=sharing)
 
 5. In another tab submit vote from the link and you will see automatically update vote count
-![Vote submit](https://jam.dev/c/248e0d36-8d6d-4d35-af5a-06a9326c04dc)
+![Vote submit](https://drive.google.com/file/d/1PEfijoHddSHtYwx2qsIGwgryaNeh8wGB/view?usp=sharing)
 
 After submiting vote please go single poll view and you see automatically update votecoutn without page
 
