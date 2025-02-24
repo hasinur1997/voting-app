@@ -80,6 +80,11 @@ php artisan db:seed --class=PollSeeder
 
 ```
 
+### To run tests
+```bash
+php artisan test tests/Feature/VoteTest.php
+```
+
 ### To test real-time functionality
 
 1. Login 
